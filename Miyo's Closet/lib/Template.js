@@ -127,8 +127,8 @@ module.exports = {
     <div style="padding:7px; margin:10px; margin-top:30px; color:#81BEF7;display:inline-block;border:solid #81BEF7 0.3px;">
     ${po}</div>
     </div>
-    <div>${description}</div>
-    <div style="text-align:center;padding:10px; margin:60px;">
+    <div style="padding:7px; width:50%">${description}</div>
+    <div style="text-align:right; padding:10px; margin:60px;">
     <a style="color:gray;"href="/product/${data[0].cid}">목록</a>
     <a style="color:gray;"href="/product/update/${data[0].pid}">수정</a>
     <br><br>

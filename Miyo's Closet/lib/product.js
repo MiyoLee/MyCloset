@@ -93,7 +93,7 @@ exports.create = function (request, response) {
       var seasonlist = ``;
       for (i = 0; i < data2.length; i++) {
         seasonlist += `<label>
-        <input type="checkbox" name="season" value=${data2[i].seasonname}>${data2[i].seasonname}
+        <input type="checkbox" name="season" value=${data2[i].seasonid}>${data2[i].seasonname}
         </label>`;
       }
 
@@ -105,15 +105,14 @@ exports.create = function (request, response) {
 exports.create_process = function (request, response) {
   console.log(request.file);
   var post = request.body;
-  db.query(`select * from season where seasonname=? or seasonname=?`, [post.season[0], post.season[1]], function (error, data) {
-    if (error) throw error;
-    db.query(`insert into products(cid,season1,season2,pname,description,po,image_name) values(?,?,?,?,?,?,?);`
-      , [post.category, data[0].seasonid, data[1].seasonid, post.pname, post.description, post.po, request.file.originalname],
-      function (error, result) {
-        if (error) throw error;
-        response.redirect(`/product/${post.category}`);
-      });
-  });
+
+  db.query(`insert into products(cid,season1,season2,pname,description,po,image_name) values(?,?,?,?,?,?,?);`
+    , [post.category, post.season[0], post.season[1], post.pname, post.description, post.po, request.file.originalname],
+    function (error, result) {
+      if (error) throw error;
+      response.redirect(`/product/${post.category}?season=`);
+    });
+
 }
 exports.update = function (pid, request, response) {
   if (request.session.displayName === undefined) {
@@ -140,14 +139,14 @@ exports.update = function (pid, request, response) {
 
         var seasonlist = ``;
         for (i = 0; i < data2.length; i++) {
-          if (data2[i].seasonname === data3[0].season1 || data2[i].seasonname === data3[0].season2) {
+          if (data2[i].seasonid === data3[0].season1 || data2[i].seasonid === data3[0].season2) {
             seasonlist += `<label>
-          <input type="checkbox" name="season" value=${data2[i].seasonname} checked="checked">${data2[i].seasonname}
+          <input type="checkbox" name="season" value=${data2[i].seasonid} checked="checked">${data2[i].seasonname}
           </label>`;
           }
           else {
             seasonlist += `<label>
-          <input type="checkbox" name="season" value=${data2[i].seasonname}>${data2[i].seasonname}
+          <input type="checkbox" name="season" value=${data2[i].seasonid}>${data2[i].seasonname}
           </label>`;
           }
         }
@@ -160,41 +159,34 @@ exports.update = function (pid, request, response) {
 }
 exports.update_process = function (request, response) {
   var post = request.body;
-  console.log(post.season);
-  console.log(`파일 : ${request.file}`);
-  if (post.season.length === 2) { //season 이 2개일 경우
-    db.query(`update products set cid=?,season1=?,season2=?,pname=?,description=?,po=? where pid=?`
-      , [post.category, post.season[0], post.season[1], post.pname, post.description, post.po, post.pid], function (error, result) {
-        if (request.file != undefined) {
-          fs.unlink(`public/uploads/${request.file.originalname}`, (err) => { //file 삭제
-            if (err) throw err;
-            response.redirect(`/product/${post.category}`); 
-          });
+  var image_name;
 
-        }
-        else {
-          response.redirect(`/product/${post.category}`);
-        }
-      })
-  }
-  else if (post.season.length > 2) {  //season은 한개일 경우
-    db.query(`update products set cid=?,season1=?,season2=?,pname=?,description=?,po=? where pid=?`
-      , [post.category, post.season, null, post.pname, post.description, post.po, post.pid], function (error, result) {
-        if (request.file != undefined) {
-          fs.unlink(`public/thumb/${post.pid}.JPG`, (err) => {
+  db.query(`select * from products where pid=?`, [post.pid], function (err, data) {
+    if (err) throw err;
+    image_name = data[0].image_name;    //변수에 기존 이미지 이름 저장
+    if (request.file == undefined) {     //새파일 안올렸을 경우
+      db.query(`update products set cid=?, season1=?, season2=?, pname=? ,description=?, po=? where pid=?`
+        , [post.category, post.season[0], post.season[1], post.pname, post.description, post.po, post.pid],
+        function (err, result) {
+          if (err) throw err;
+          response.redirect(`/product/${post.category}?season=`);
+        })
+    }
+    else {   //새파일 올렸을 경우
+      fs.unlink(`public/uploads/${image_name}`, (err) => { //기존 file 삭제
+        if (err) throw err;
+        db.query(`update products set cid=?, season1=?, season2=?, pname=? ,description=?, po=?, image_name=? where pid=?`
+          , [post.category, post.season[0], post.season[1], post.pname, post.description, request.file.originalname, post.pid],
+          function (err, result) {
             if (err) throw err;
-            fs.rename(`uploads/${request.file.originalname}`, `public/thumb/${post.pid}.JPG`, (err) => {
-              if (err) throw err;
-              response.redirect(`/product/${post.category}`);
-            });
+            response.redirect(`/product/${post.category}?season=`);
           })
-        }
-        else {
-          response.redirect(`/product/${post.category}`);
-        }
-      })
-  }
+      });
+
+    }
+  })
 }
+
 exports.delete_process = function (request, response) {
   if (request.session.displayName === undefined) {
     response.send(`<div style="text-align:center;padding:30px;margin:60px;">
