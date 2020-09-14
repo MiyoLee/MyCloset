@@ -173,16 +173,15 @@ exports.update_process = function (request, response) {
         })
     }
     else {   //새파일 올렸을 경우
-      fs.unlink(`public/uploads/${image_name}`, (err) => { //기존 file 삭제
-        if (err) throw err;
-        db.query(`update products set cid=?, season1=?, season2=?, pname=? ,description=?, po=?, image_name=? where pid=?`
-          , [post.category, post.season[0], post.season[1], post.pname, post.description, request.file.originalname, post.pid],
-          function (err, result) {
+      db.query(`update products set cid=?, season1=?, season2=?, pname=?, description=?, po=?, image_name=? where pid=?`
+        , [post.category, post.season[0], post.season[1], post.pname, post.description, post.po, request.file.originalname, post.pid],
+        function (err, result) {
+          if (err) throw err;
+          fs.unlink(`public/uploads/${image_name}`, (err) => { //기존 file 삭제
             if (err) throw err;
             response.redirect(`/product/${post.category}?season=`);
           })
-      });
-
+        })
     }
   })
 }

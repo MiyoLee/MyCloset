@@ -31,6 +31,7 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false })); //미들웨어사용
 app.use(express.static('public'));
 app.use(compression()); //압축
+
 app.get('*',function(request, response, next){  //미들웨어 만듬.
   db.query('select * from category',function(error,catelist){
     if (error) throw error; 
