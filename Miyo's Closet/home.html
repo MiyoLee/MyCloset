@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>miyos_closet</title>
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="color.js"></script>
+  <style>
+  body{
+    margin:0;
+    font-family: Georgia, "dotum", serif;
+  }
+  h1{
+    font-size:45px;
+    font-family: Georgia, "Malgun Gothic", serif;
+    text-align:center;
+    color:#F79F81;
+    border-bottom:0.05px solid #F79F81;
+    height:45px;
+    padding:70px; margin:0px;
+  }
+  a{
+    color:#F79F81;
+    text-decoration:none;
+  }
+  #title{
+    padding:25px;
+    border-top:solid #CED8F6 4px;
+    border-bottom:solid #CED8F6 4px;
+  }
+  ul{
+    border-right:0.05px solid #F79F81;
+    margin:0px;
+    width:225px; height:1000px;
+    padding:0px;
+  }
+  li{
+    padding:20px;
+    width:170px;
+  }
+  button{
+    background-color:#F79F81; color:white;
+    position: relative; border:none; padding:0 4em;
+    cursor:pointer; transition:800ms ease all; outline:none;
+    margin-left:-6px;
+  }
+  button:hover{
+  background:#fff;
+  color:coral;
+}
+  #grid{
+    padding:0px;
+    display:grid;
+    grid-template-columns: 225px 1fr;
+  }
+  #items{
+    padding:10px;
+  }
+  #category{
+    display:inline-block;
+    text-align:center;
+    position:relative;
+    left:350px;
+    padding:30px;
+  }
+  #ect,#items{
+    background-color: #F5ECCE;
+  }
+  #login{
+    padding:20px;
+    background-color:#F79F81;
+  }
+  </style>
+</head>
+<body>
+  <div id="top_btns">
+    <input  id=night_day type="button" value="night" style="background-color:#F79F81; color:white;
+    position:fixed; top:10px; right:0px; border:none; padding:0 4em;
+    cursor:pointer; transition:800ms ease all; outline:none;"
+    onclick="nightDayHandler(this)">
+
+  </div>
+  <h1>
+    <a id="title" href="home.html">Miyo's Closet &dagger;</a>
+  </h1>
+
+<div id="grid">
+  <div>
+    <ul>
+      <div id=login>
+      <form action="로그인 완료">
+      <p>id:<br><input type="text" style="width:150px"></p>
+      <p>pw:<br><input type="password" style="width:150px"></p>
+      <p><input type="submit" value="login" style="position:relative; right:-110px; width:77px; height:30px;"></p>
+      </form>
+      </div>
+      <li><a href="outer.html">&diams; outer &diams;</a></li>
+      <li><a href="top.html">&diams; top &diams;</a></li>
+      <li><a href="bottom.html">&diams; bottom &diams;</a></li>
+      <li><a href="shoes.html">&diams; shoes &diams;</a></li>
+      <li><a href="acc.html">&diams; acc &diams;</a></li>
+      <br><br>
+      <div id="ect">
+        <li><a href="notice.html">&loz; noitce</a></li>
+        <li><a href="qna.html">&loz; Q&A</a></li>
+      </div>
+    </ul>
+  </div>
+  <div>
+    <h2 id="category">new!</h2>
+    <div id="items">
+      숏 야상 (black)<br>
+      크롭 가디건 (ivory)<br>
+      셔링포인트 티 (black)
+    </div>
+  </div>
+</div>
+</body>
+</html>
